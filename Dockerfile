@@ -16,10 +16,12 @@ WORKDIR /usr/src/app
 # Copy dependency files first
 COPY go.mod go.sum ./
 COPY package.json pnpm-lock.yaml ./
+COPY web/libs/lit-html/package.json ./web/libs/lit-html/
 
 # Install dependencies
 RUN go mod download && go mod verify
 RUN pnpm install
+RUN cd web/libs/lit-html && pnpm install
 
 # Copy the rest of the source code
 COPY . .
