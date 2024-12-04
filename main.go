@@ -64,7 +64,9 @@ func main() {
 		return
 	}
 
-	fmt.Println("element_body", element_body)
+	// fmt.Println("element_body", element_body)
+
+	ReadInputAndFindAllWords()
 
 	router := chi.NewMux()
 	router.Use(middleware.Logger)
@@ -193,6 +195,80 @@ func render(payload []byte) ([]byte, error) {
 	}
 
 	return out, nil
+}
+
+// Day 4 of Advent of Code challenge
+
+func ReadInputAndFindAllWords() {
+	text := parseInput("AoC/day4-input.txt")
+
+	fmt.Printf("words: %v\n", findAllXMAS(text))
+}
+
+func findAllXMAS(input string) int {
+    // Split input into lines to create grid
+    lines := strings.Split(strings.TrimSpace(input), "\n")
+    if len(lines) == 0 {
+        return 0
+    }
+
+    count := 0
+    rows := len(lines)
+    cols := len(lines[0])
+
+    // Look for center 'A's
+    for row := 1; row < rows-1; row++ {
+        for col := 1; col < cols-1; col++ {
+            // Only process if we find an 'A'
+            if lines[row][col] != 'A' {
+                continue
+            }
+
+            // Check diagonal pairs
+            leftDiagonal := string([]byte{
+                lines[row-1][col-1], // top-left
+                lines[row+1][col+1], // bottom-right
+            })
+            rightDiagonal := string([]byte{
+                lines[row-1][col+1], // top-right
+                lines[row+1][col-1], // bottom-left
+            })
+
+            // Check if both diagonals form valid patterns
+            if (leftDiagonal == "SM" || leftDiagonal == "MS") &&
+               (rightDiagonal == "SM" || rightDiagonal == "MS") {
+                count++
+            }
+        }
+    }
+
+    return count
+}
+
+func checkXMAS(lines []string, row, col, dx, dy int) bool {
+    // Check if the pattern "M.A.S" exists in the given direction
+    if lines[row][col] == 'M' && lines[row+1][col+dy] == 'A' && lines[row+2][col+2*dy] == 'S' {
+        // Check the opposite "MAS" in the X
+        if lines[row+2][col] == 'M' && lines[row+1][col+dy] == 'A' && lines[row][col+2*dy] == 'S' {
+            return true
+        }
+        // Check the opposite "SAM" in the X
+        if lines[row+2][col] == 'S' && lines[row+1][col+dy] == 'A' && lines[row][col+2*dy] == 'M' {
+            return true
+        }
+    }
+    // Check if the pattern "S.A.M" exists in the given direction
+    if lines[row][col] == 'S' && lines[row+1][col+dy] == 'A' && lines[row+2][col+2*dy] == 'M' {
+        // Check the opposite "MAS" in the X
+        if lines[row+2][col] == 'M' && lines[row+1][col+dy] == 'A' && lines[row][col+2*dy] == 'S' {
+            return true
+        }
+        // Check the opposite "SAM" in the X
+        if lines[row+2][col] == 'S' && lines[row+1][col+dy] == 'A' && lines[row][col+2*dy] == 'M' {
+            return true
+        }
+    }
+    return false
 }
 
 // Day 3 of Advent of Code challenge
@@ -442,5 +518,5 @@ func parseInput(filePath string) (string) {
         fmt.Printf("error reading file: %v", err)
     }
 
-    return strings.Join(text, "")
+    return strings.Join(text, "\n")
 }
