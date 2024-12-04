@@ -66,8 +66,6 @@ func main() {
 
 	// fmt.Println("element_body", element_body)
 
-	ReadInputAndFindAllWords()
-
 	router := chi.NewMux()
 	router.Use(middleware.Logger)
 
