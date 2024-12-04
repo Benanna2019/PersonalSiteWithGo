@@ -5,10 +5,12 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"regexp"
 
 	"net/http"
 	"os"
-	"os/signal"
+
+	// "os/signal"
 	"sort"
 	"strconv"
 	"strings"
@@ -18,6 +20,7 @@ import (
 	"path/filepath"
 
 	extism "github.com/extism/go-sdk"
+	"github.com/zangster300/northstar/web/components"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -30,7 +33,7 @@ const port = 8080
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	logger.Info(fmt.Sprintf("Starting Server @:%d", port))
-	defer logger.Info("Stopping Server")
+	// defer logger.Info("Stopping Server")
 
 	// ReadReportsAndFindSafeReportsBasedOnLevels()
 
@@ -63,13 +66,27 @@ func main() {
 
 	fmt.Println("element_body", element_body)
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer stop()
+	ReadInputAndFindValidMultipliers()
 
-	if err := run(ctx, logger); err != nil {
-		logger.Error("Error running server", slog.Any("err", err))
-		os.Exit(1)
-	}
+
+	router := chi.NewMux()
+	router.Use(middleware.Logger)
+
+	router.Handle("/static/*", http.StripPrefix("/static/", static(logger)))
+
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		components.DummySiteLayout(element_body).Render(r.Context(), w)
+	})
+
+	http.ListenAndServe(":4000", router)
+
+	// ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	// defer stop()
+
+	// if err := run(ctx, logger); err != nil {
+	// 	logger.Error("Error running server", slog.Any("err", err))
+	// 	os.Exit(1)
+	// }
 }
 
 func run(ctx context.Context, logger *slog.Logger) error {
@@ -179,6 +196,42 @@ func render(payload []byte) ([]byte, error) {
 	}
 
 	return out, nil
+}
+
+// Day 3 of Advent of Code challenge
+
+func ReadInputAndFindValidMultipliers() {
+	text := parseInput("AoC/day3-input.txt")
+
+    fmt.Printf("sum: %d\n", findAndCalculateMuls(text))
+
+}
+
+func findAndCalculateMuls(input string) int {
+    // Combined regex with capture groups for both control instructions and mul numbers
+  regex := regexp.MustCompile(`(mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\))`)
+    
+    matches := regex.FindAllStringSubmatch(input, -1)
+    
+    mulEnabled := true
+    sum := 0
+
+    for _, match := range matches {
+        switch match[1] {
+        case "do()":
+            mulEnabled = true
+        case "don't()":
+            mulEnabled = false
+        default:
+            if mulEnabled {
+                n, _ := strconv.Atoi(match[2])
+                m, _ := strconv.Atoi(match[3])
+                sum += n * m
+            }
+        }
+    }
+
+    return sum
 }
 
 
@@ -372,4 +425,25 @@ func calculateSimilarityScores(left, right []int) []int {
 	}
 
 	return similarityScores
+}
+
+func parseInput(filePath string) (string) {
+    file, err := os.Open(filePath)
+    if err != nil {
+        fmt.Printf("failed to open file: %v", err)
+    }
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+
+    text := []string{}
+    for scanner.Scan() {
+        text = append(text, scanner.Text())
+    }
+
+    if err := scanner.Err(); err != nil {
+        fmt.Printf("error reading file: %v", err)
+    }
+
+    return strings.Join(text, "")
 }
