@@ -1,40 +1,15 @@
-ARG GO_VERSION=1
-FROM golang:${GO_VERSION}-bookworm as builder
+FROM docker.io/golang:1.23.3-alpine AS build
 
-# Install Node.js and npm (needed for pnpm, tailwind, etc.)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+RUN apk add --no-cache upx
+ENV PORT=8080
 
-# Install pnpm
-RUN npm install -g pnpm
+WORKDIR /src
+COPY . ./
+RUN go mod download
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    go build -ldflags="-s" -o /bin/main .
+RUN upx -9 -k /bin/main
 
-# Install Task
-RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-
-WORKDIR /usr/src/app
-
-# Copy dependency files first
-COPY go.mod go.sum ./
-COPY package.json pnpm-lock.yaml ./
-COPY web/libs/lit-html/package.json ./web/libs/lit-html/
-
-# Install dependencies
-RUN go mod download && go mod verify
-RUN pnpm install
-RUN cd web/libs/lit-html && pnpm install
-
-# Copy the rest of the source code
-COPY . .
-
-# Run the build task
-RUN task build
-
-FROM debian:bookworm
-
-# Copy the compiled binary
-COPY --from=builder /usr/src/app/bin/main /usr/local/bin/run-app
-
-# Copy static files
-COPY --from=builder /usr/src/app/web/static /usr/local/bin/web/static
-
-CMD ["run-app"]
+FROM scratch
+COPY --from=build /bin/main /
+ENTRYPOINT ["/main"]
