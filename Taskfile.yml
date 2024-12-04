@@ -17,7 +17,7 @@ tasks:
 
   build:esbuild:
     cmds:
-      - pnpx esbuild web/libs/datastar/index.ts --bundle --outdir=$STATIC_DIR
+      - pnpx esbuild web/libs/datastar/index.ts --bundle --outdir=$STATIC_DIR --external:@starfederation/datastar
 
   build:lit-html:
     cmds:
