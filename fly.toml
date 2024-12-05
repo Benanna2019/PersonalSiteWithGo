@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for northstar on 2024-12-02T19:44:16-05:00
+# fly.toml app configuration file generated for benpattonpersonalsite on 2024-12-04T16:28:13-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,8 +7,6 @@ app = 'benpattonpersonalsite'
 primary_region = 'iad'
 
 [build]
-  [build.args]
-    GO_VERSION = '1.23.3'
 
 [env]
   PORT = '8080'

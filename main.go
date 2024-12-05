@@ -75,7 +75,7 @@ func main() {
 		components.DummySiteLayout(element_body).Render(r.Context(), w)
 	})
 
-	http.ListenAndServe(":4000", router)
+	http.ListenAndServe(":8080", router)
 
 	// ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	// defer stop()
