@@ -26,4 +26,5 @@ FROM scratch
 COPY --from=build /bin/main /
 COPY --from=build /src/web/static /web/static
 COPY --from=build /src/web/custom-elements /web/custom-elements
+COPY --from=build /src/wasm/enhance-ssr.wasm /wasm/enhance-ssr.wasm
 ENTRYPOINT ["/main"]

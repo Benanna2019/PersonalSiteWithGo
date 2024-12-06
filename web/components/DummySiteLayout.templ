@@ -6,7 +6,7 @@ import "github.com/zangster300/northstar/web/layouts"
 
 templ DummySiteLayout(element_body string) {
 	@layouts.Base("Dummy Site Layout") {
-		<div class="flex flex-col min-h-screen border-2 border-red-500">
+		<div class=" flex flex-col min-h-screen">
 			@templ.Raw(element_body)
 		</div>
 	}
