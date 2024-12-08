@@ -17,8 +17,6 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const port = 8080
-
 //go:embed web/custom-elements
 var customElements embed.FS
 
