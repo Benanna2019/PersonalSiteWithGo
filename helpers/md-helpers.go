@@ -49,11 +49,8 @@ func GetPostById(id string) (*PostWithContent, error) {
         id = id + ".md"
     }
 
-	fmt.Println("id", id)
-
     // Try to read the specific file directly
     filePath := filepath.Join("content", id)
-	fmt.Println("filePath", filePath)
     meta, content, err := ParseMarkdownFile(filePath)
     if err != nil {
         return nil, fmt.Errorf("post not found: %w", err)
@@ -211,7 +208,5 @@ func GetPaginatedPosts(limit, offset int) ([]PostData, int, error) {
         return nil, 0, err
     }
 
-
-    fmt.Printf("Returning posts from %d to %d\n", offset, offset + limit)
     return allPosts, len(allPosts), nil
 }

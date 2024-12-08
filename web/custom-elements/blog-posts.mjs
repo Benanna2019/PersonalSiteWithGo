@@ -4,8 +4,8 @@ function BlogPosts({ html, state }) {
 
   const cards = posts
     .slice(offset, offset + limit)
-    .map((o, i) => `<blog-card key="${i + offset}">post</blog-card>`)
+    .map((o, i) => `<blog-card key="${i + offset}"></blog-card>`)
     .join("");
 
-  return html` <section class="mi-auto pb0">${cards}</section> `;
+  return html` <section class="mi-auto my-8 ">${cards}</section> `;
 }

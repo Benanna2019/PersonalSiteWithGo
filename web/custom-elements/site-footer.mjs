@@ -7,11 +7,13 @@ function SiteFooter({ html }) {
         <a rel='me' href='${me}' class='font-body text-1 uppercase tracking3 underline'>Mastodon</a>
       </p>`
         : ""}
-      <p class="text-center">
-        <a href="/rss" class="font-body text-1 uppercase tracking3 underline"
-          >RSS</a
-        >
+      <p class="text-center text-sm">
+        All rights reserved © Benjamin Patton 2024
       </p>
     </footer>
   `;
 }
+
+// <a href="/rss" class="font-body text-1 uppercase tracking3 underline">
+//   RSS
+// </a>;

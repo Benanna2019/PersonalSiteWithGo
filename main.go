@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/zangster300/northstar/helpers"
 	"github.com/zangster300/northstar/routes"
 	"golang.org/x/sync/errgroup"
 )
@@ -64,6 +65,10 @@ func startServer(ctx context.Context, logger *slog.Logger, port string, customEl
 		)
 
 		router.Handle("/static/*", http.StripPrefix("/static/", static(logger)))
+
+		if err := helpers.GenerateRSSFeed(); err != nil {
+			logger.Error("Failed to generate RSS feed", slog.Any("err", err))
+		}
 
 		cleanup, err := routes.SetupRoutes(ctx, logger, router, customElements)
 		defer cleanup()

@@ -37,7 +37,9 @@ require (
 	github.com/go-rod/rod v0.116.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/google/brotli/go/cbrotli v0.0.0-20241125091258-91d96d3d9353 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/gorilla/feeds v1.2.0 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/ianlancetaylor/demangle v0.0.0-20240805132620-81f5be970eca // indirect

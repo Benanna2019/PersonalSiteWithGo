@@ -15,7 +15,7 @@ function BlogPost({ html, state }) {
       }
     </style>
     <a href="${href}" class="no-underline">
-      <article class="pb2">
+      <article class="pb2 mb-6">
         <div class="font-body leading3">
           <h1 class="font-heading font-bold leading1 text1 tracking-1 mbe0">
             ${title}
