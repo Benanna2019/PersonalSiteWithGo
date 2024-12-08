@@ -10,7 +10,7 @@ authorImage: "https://cdn.sanity.io/images/nfspldzq/production/3ceeda54221c7c061
 type: "Blog"
 ---
 
-<img src="/public/images/enhance/enhance.png" alt="enhance" />
+![enhance](/static/images/enhance/enhance.png)
 
 _There is more to add to this overtime but wanted to get it out there_.
 

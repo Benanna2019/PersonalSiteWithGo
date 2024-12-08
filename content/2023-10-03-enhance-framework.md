@@ -38,7 +38,7 @@ Fast forward to that serverless journey I said I went on. I explored all the maj
 
 I started looking into it more and Brian actually jumped on another call with me and talked to me about [Functional Web Apps](https://fwa.dev), again, something I did not fully appreciate at the time. But all of these things over time have started to make sense. I just had to give myself a bit more time and exposure to patterns and current practices to understand them. So here is the convergence of ideas I am referring too in graphic form.
 
-![The Convergence of Ideas](/public/images/convergence/nine-realms.png)
+![The Convergence of Ideas](/static/images/convergence/nine-realms.png)
 
 [_Globe Image By brgfx on Freepik_](https://www.freepik.com/free-vector/earth-globe-cartoon-sticker-white-background_21196645.htm#page=2&query=globe%202d&position=3&from_view=search&track=ais)
 
