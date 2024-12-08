@@ -25,6 +25,7 @@ RUN upx -9 -k /bin/main
 FROM scratch
 COPY --from=build /bin/main /
 COPY --from=build /src/web/static /web/static
+COPY --from=build /src/web/static/images /web/static/images  # Explicitly copy images
 COPY --from=build /src/web/custom-elements /web/custom-elements
 COPY --from=build /src/wasm/enhance-ssr.wasm /wasm/enhance-ssr.wasm
 COPY --from=build /src/content /content
