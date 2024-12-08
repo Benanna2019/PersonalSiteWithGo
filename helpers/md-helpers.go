@@ -156,8 +156,8 @@ func GetMarkdownPosts() []struct {
 
     // Sort posts by date if needed
     sort.Slice(posts, func(i, j int) bool {
-		date1, _ := time.Parse("January 2, 2024", posts[i].Meta.Published)
-		date2, _ := time.Parse("January 2, 2024", posts[j].Meta.Published)
+		date1, _ := time.Parse("January 2, 2025", posts[i].Meta.Published)
+		date2, _ := time.Parse("January 2, 2025", posts[j].Meta.Published)
 
         return date1.After(date2)
     })

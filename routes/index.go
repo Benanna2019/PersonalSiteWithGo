@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"embed"
@@ -194,32 +192,6 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
             //     return
             // }
     })
-
-	router.Get("/rss", func(w http.ResponseWriter, r *http.Request) {
-		acceptEncoding := r.Header.Get("Accept-Encoding")
-		returnCompressed := strings.Contains(acceptEncoding, "br")
-
-		w.Header().Set("Content-Type", "application/rss+xml; charset=UTF-8")
-
-		if returnCompressed {
-			// Read compressed RSS feed
-			data, err := os.ReadFile("web/static/rss.br")
-			if err != nil {
-            http.Error(w, "Failed to read RSS feed", http.StatusInternalServerError)
-            return
-        }
-        w.Header().Set("Content-Encoding", "br")
-			w.Write(data)
-		} else {
-			// Read uncompressed RSS feed
-			data, err := os.ReadFile("web/static/rss.xml")
-			if err != nil {
-            http.Error(w, "Failed to read RSS feed", http.StatusInternalServerError)
-            return
-        }
-			w.Write(data)
-		}
-	})
 
 	router.Route("/api", func(apiRouter chi.Router) {
 

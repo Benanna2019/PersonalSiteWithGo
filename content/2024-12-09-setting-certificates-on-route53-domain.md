@@ -9,3 +9,5 @@ author: "Ben Patton"
 authorImage: "https://cdn.sanity.io/images/nfspldzq/production/3ceeda54221c7c0614ecc51f955c7be39a1da34e-512x512.jpg"
 type: "Blog"
 ---
+
+# Content for Certificates
