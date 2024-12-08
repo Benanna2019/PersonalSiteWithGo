@@ -67,7 +67,8 @@ tasks:
         --build.bin "tmp/bin/main" \
         --build.delay "20" \
         --build.exclude_dir "node_modules,data,public" \
-        --build.include_ext "go" \
+        --build.include_ext "go,mjs" \
+        --build.include_dir "routes,handlers,web,content" \
         --build.stop_on_error "false" \
         --misc.clean_on_exit true
 
@@ -80,7 +81,7 @@ tasks:
         --build.delay "100" \
         --build.exclude_dir "" \
         --build.include_dir "$STATIC_DIR" \
-        --build.include_ext "js,css"
+        --build.include_ext "mjs,js,css"
 
   live:
     deps:

@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"embed"
+
 	datastar "github.com/starfederation/datastar/code/go/sdk"
 
 	"github.com/delaneyj/toolbelt"
@@ -16,11 +18,11 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/samber/lo"
+	"github.com/zangster300/northstar/helpers"
 	"github.com/zangster300/northstar/web/components"
-	"github.com/zangster300/northstar/web/pages"
 )
 
-func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.Server) error {
+func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.Server, customElements embed.FS) error {
 	nc, err := ns.Client()
 	if err != nil {
 		return fmt.Errorf("error creating nats client: %w", err)
@@ -92,10 +94,114 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		pages.Index("HYPERMEDIA RULES").Render(r.Context(), w)
+                // Get pagination parameters
+                limit := 20
+                if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
+                    if l, err := strconv.Atoi(limitStr); err == nil && l > 0 {
+                        limit = l
+                    }
+                }
+
+                offset := 0
+                if offsetStr := r.URL.Query().Get("offset"); offsetStr != "" {
+                    if o, err := strconv.Atoi(offsetStr); err == nil && o >= 0 {
+                        offset = o
+                    }
+                }
+
+
+                paginatedPosts, total, err := helpers.GetPaginatedPosts(limit, offset)
+                if err != nil {
+                    http.Error(w, err.Error(), http.StatusInternalServerError)
+                    return
+                }
+
+                posts := make([]map[string]interface{}, len(paginatedPosts))
+                for i, post := range paginatedPosts {
+                    posts[i] = map[string]interface{}{
+                        "href": post.Href,
+                        "frontmatter": map[string]interface{}{
+                            "id":          post.Frontmatter.ID,
+                            "title":       post.Frontmatter.Title,
+                            "published":   post.Frontmatter.Published,
+                            "slug":        post.Frontmatter.Slug,
+                            "description": post.Frontmatter.Description,
+                            "categories":  post.Frontmatter.Categories,
+                            "author":      post.Frontmatter.Author,
+                            "authorImage": post.Frontmatter.AuthorImage,
+                            "type":        post.Frontmatter.Type,
+                        },
+                    }
+                }
+
+                data := map[string]interface{}{
+                    "posts":  posts,
+                    "limit":  limit,
+                    "offset": offset,
+                    "total":  total,
+                }
+
+				ssr_elements := helpers.RenderSSR(customElements, "<index-page></index-page>", data)
+				if ssr_elements.Error != nil {
+					http.Error(w, ssr_elements.Error.Error(), http.StatusInternalServerError)
+					return
+				}
+
+			components.DummySiteLayout(ssr_elements.Body).Render(r.Context(), w)
+
+				
 	})
 
+	router.Get("/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
+            id := chi.URLParam(r, "id")
+
+            
+            post, err := helpers.GetPostById(id)
+            if err != nil {
+                http.Error(w, err.Error(), http.StatusNotFound)
+                return
+            }
+
+            data := map[string]interface{}{
+                "post": map[string]interface{}{
+                    "href": post.Href,
+                    "frontmatter": map[string]interface{}{
+                        "id":          post.Frontmatter.ID,
+                        "title":       post.Frontmatter.Title,
+                        "published":   post.Frontmatter.Published,
+                        "slug":        post.Frontmatter.Slug,
+                        "description": post.Frontmatter.Description,
+                        "categories":  post.Frontmatter.Categories,
+                        "author":      post.Frontmatter.Author,
+                        "authorImage": post.Frontmatter.AuthorImage,
+                        "type":        post.Frontmatter.Type,
+                    },
+                    "html": post.Html,
+                },
+            }
+
+            ssr_elements := helpers.RenderSSR(customElements, "<post-page></post-page>", data)
+            if ssr_elements.Error != nil {
+                http.Error(w, ssr_elements.Error.Error(), http.StatusInternalServerError)
+                return
+            }
+
+            components.DummySiteLayout(ssr_elements.Body).Render(r.Context(), w)
+            // if err := sse.MergeFragmentTempl(c); err != nil {
+            //     sse.ConsoleError(err)
+            //     return
+            // }
+    })
+
 	router.Route("/api", func(apiRouter chi.Router) {
+
+		apiRouter.Route("/posts", func(postsRouter chi.Router) {
+			postsRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+
+				
+			})
+		})
+
 		apiRouter.Route("/todos", func(todosRouter chi.Router) {
 			todosRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 
