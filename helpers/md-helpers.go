@@ -156,11 +156,13 @@ func GetMarkdownPosts() []struct {
 
     // Sort posts by date if needed
     sort.Slice(posts, func(i, j int) bool {
-		date1, _ := time.Parse("January 2, 2025", posts[i].Meta.Published)
-		date2, _ := time.Parse("January 2, 2025", posts[j].Meta.Published)
+		date1, _ := time.Parse("January 2, 2006", posts[i].Meta.Published)
+		date2, _ := time.Parse("January 2, 2006", posts[j].Meta.Published)
 
-        return date1.After(date2)
+        return date1.Unix() > date2.Unix()
     })
+
+	fmt.Println("posts", posts)
 
     return posts
 }
@@ -196,7 +198,10 @@ func GetPostMetadata() ([]PostData, error) {
 
     // Sort by date with newest first
     sort.Slice(posts, func(i, j int) bool {
-        return posts[i].Frontmatter.Published > posts[j].Frontmatter.Published
+        date1, _ := time.Parse("January 2, 2006", posts[i].Frontmatter.Published)
+		date2, _ := time.Parse("January 2, 2006", posts[j].Frontmatter.Published)
+
+        return date1.Unix() > date2.Unix()
     })
 
     return posts, nil

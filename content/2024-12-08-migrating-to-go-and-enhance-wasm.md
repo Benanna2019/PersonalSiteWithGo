@@ -10,4 +10,6 @@ authorImage: "https://cdn.sanity.io/images/nfspldzq/production/3ceeda54221c7c061
 type: "Blog"
 ---
 
-# Content
+# Why Migrate from JS to Go?
+
+I'll tell you another day.

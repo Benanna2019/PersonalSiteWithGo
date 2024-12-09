@@ -11,11 +11,11 @@ function BlogPagination({ html, state }) {
 
   const buttons = new Array(totalPages)
     .fill("")
-    .map((_, index) => index) // populate array values with indexes
+    .map((_, index) => index)
     .filter(
       (pageIndex) =>
         pageIndex >= currentIndex - 2 && pageIndex <= currentIndex + 2
-    ) // trim to 2 indexes before and after active index
+    )
     .map(
       (pageIndex) =>
         `<blog-pagination-button
@@ -40,12 +40,12 @@ function BlogPagination({ html, state }) {
       : "";
 
   const firstButton =
-    currentIndex > 3
-      ? '<blog-pagination-button class="hidden block-lg" index="0" label="« First"></blog-pagination-button>'
+    currentIndex > 0
+      ? `<blog-pagination-button class="hidden block-lg" index="0" label="« First"></blog-pagination-button>`
       : "";
 
   const lastButton =
-    currentIndex < totalPages - 3
+    currentIndex < totalPages - 1
       ? `<blog-pagination-button class="hidden block-lg" index="${
           totalPages - 1
         }" label="Last »"></blog-pagination-button>`
