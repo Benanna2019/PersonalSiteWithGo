@@ -20,6 +20,7 @@ import (
 	"github.com/samber/lo"
 	"github.com/zangster300/northstar/helpers"
 	"github.com/zangster300/northstar/web/components"
+	"github.com/zangster300/northstar/web/layouts"
 )
 
 func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.Server, customElements embed.FS) error {
@@ -147,7 +148,7 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 					return
 				}
 
-			components.DummySiteLayout(ssr_elements.Body).Render(r.Context(), w)
+			components.DummySiteLayout(ssr_elements.Body, "Home").Render(r.Context(), w)
 
 				
 	})
@@ -180,13 +181,24 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
                 },
             }
 
+			site_url := helpers.GetSiteURL()
+
+			post_meta := layouts.MetaData{
+				Title:       post.Frontmatter.Title,
+				Description: post.Frontmatter.Description,
+				CoverImage:  "/static/images/outdoorworking.png",
+				CoverWidth:  "16",
+				CoverHeight: "9",
+				SiteURL:     site_url,
+			}
+
             ssr_elements := helpers.RenderSSR(customElements, "<post-page></post-page>", data)
             if ssr_elements.Error != nil {
                 http.Error(w, ssr_elements.Error.Error(), http.StatusInternalServerError)
                 return
             }
 
-            components.DummySiteLayout(ssr_elements.Body).Render(r.Context(), w)
+            components.PostDetailWrapper(ssr_elements.Body, post.Frontmatter.Title, post_meta).Render(r.Context(), w)
             // if err := sse.MergeFragmentTempl(c); err != nil {
             //     sse.ConsoleError(err)
             //     return
