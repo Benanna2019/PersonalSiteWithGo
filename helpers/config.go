@@ -5,7 +5,7 @@ import "os"
 func GetSiteURL() string {
 	env := os.Getenv("APP_ENV")
     if env == "development" {
-        return "http://localhost:3000"
+        return "http://localhost:8080"
     }
-    return "https://benapatton.com"
+    return "https://benpattonpersonalsite.fly.dev"
 }
