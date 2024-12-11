@@ -5,6 +5,7 @@ web/static/**/*
 !web/static/images
 
 .github/workflows/fly-deploy.yml
+content-ideas
 
 # ------------------------------------------------------------------
 # Go

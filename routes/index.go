@@ -95,6 +95,8 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	}
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		    w.Header().Set("Cache-Control", helpers.GetCacheControl())
+
                 // Get pagination parameters
                 limit := 20
                 if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
@@ -154,6 +156,8 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 	})
 
 	router.Get("/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
+		    w.Header().Set("Cache-Control", helpers.GetCacheControl())
+			
             id := chi.URLParam(r, "id")
 
             
