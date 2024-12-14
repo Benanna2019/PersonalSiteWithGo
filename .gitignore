@@ -1,8 +1,9 @@
 # source: https://github.com/github/gitignore/tree/main
 # ------------------------------------------------------------------
 data/*
-web/static/**/*
+web/static/*
 !web/static/images
+!web/static/browser
 
 .github/workflows/fly-deploy.yml
 content-ideas

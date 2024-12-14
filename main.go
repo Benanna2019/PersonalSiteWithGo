@@ -4,6 +4,7 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/zangster300/northstar/helpers"
 	"github.com/zangster300/northstar/routes"
 	"golang.org/x/sync/errgroup"
 )
@@ -30,6 +32,11 @@ func main() {
 	}
 	logger.Info(fmt.Sprintf("Starting Server 0.0.0.0:" + getPort()))
 	defer logger.Info("Stopping Server")
+
+	err := helpers.GenerateRSSFeed()
+    if err != nil {
+        log.Fatal(err)
+    }
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()

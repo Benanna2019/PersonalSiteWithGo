@@ -16,7 +16,7 @@ func GetSiteURL() string {
     if env == "development" {
         return "http://localhost:8080"
     }
-    return "https://benpattonpersonalsite.fly.dev"
+    return "https://benapatton.com"
 }
 
 func GetCacheControl() string {

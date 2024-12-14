@@ -94,6 +94,41 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 		return sessionID, mvc, nil
 	}
 
+	// router.Get("/rss", func(w http.ResponseWriter, r *http.Request) {
+	// 	// Check if client accepts brotli compression
+	// 	acceptEncoding := r.Header.Get("Accept-Encoding")
+	// 	returnCompressed := strings.Contains(acceptEncoding, "br")
+
+	// 	// Set content type header with charset
+	// 	w.Header().Set("Content-Type", "application/rss+xml; charset=UTF-8")
+
+	// 	if returnCompressed {
+	// 		// Serve compressed .br file
+	// 		w.Header().Set("Content-Encoding", "br")
+	// 		brContent, err := os.ReadFile("web/static/rss.br")
+	// 		if err != nil {
+	// 			http.Error(w, "Failed to read RSS feed", http.StatusInternalServerError)
+	// 			return
+	// 		}
+	// 		w.Write(brContent)
+	// 	} else {
+	// 		// Serve uncompressed .xml file
+	// 		xmlContent, err := os.ReadFile("web/static/rss.xml")
+	// 		if err != nil {
+	// 			http.Error(w, "Failed to read RSS feed", http.StatusInternalServerError)
+	// 			return
+	// 		}
+			
+	// 		// Ensure XML has UTF-8 declaration
+	// 		if !strings.HasPrefix(string(xmlContent), "<?xml") {
+	// 			xmlDeclaration := []byte(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
+	// 			w.Write(xmlDeclaration)
+	// 		}
+			
+	// 		w.Write(xmlContent)
+	// 	}
+	// })	
+
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		    w.Header().Set("Cache-Control", helpers.GetCacheControl())
 
@@ -150,14 +185,22 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 					return
 				}
 
-			components.DummySiteLayout(ssr_elements.Body, "Home").Render(r.Context(), w)
+			components.SiteLayout(ssr_elements.Body, layouts.MetaData{
+				Title:       "Home",
+				PageType:    layouts.PageTypeDefault,
+			}).Render(r.Context(), w)
 
 				
 	})
 
+	router.Get("/sw", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/javascript")
+		w.Write([]byte(helpers.GetSWJS()))
+	})
+
 	router.Get("/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
 		    w.Header().Set("Cache-Control", helpers.GetCacheControl())
-			
+
             id := chi.URLParam(r, "id")
 
             
@@ -187,22 +230,21 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 
 			site_url := helpers.GetSiteURL()
 
-			post_meta := layouts.MetaData{
-				Title:       post.Frontmatter.Title,
-				Description: post.Frontmatter.Description,
-				CoverImage:  "/static/images/outdoorworking.png",
-				CoverWidth:  "16",
-				CoverHeight: "9",
-				SiteURL:     site_url,
-			}
-
             ssr_elements := helpers.RenderSSR(customElements, "<post-page></post-page>", data)
             if ssr_elements.Error != nil {
                 http.Error(w, ssr_elements.Error.Error(), http.StatusInternalServerError)
                 return
             }
 
-            components.PostDetailWrapper(ssr_elements.Body, post.Frontmatter.Title, post_meta).Render(r.Context(), w)
+			components.SiteLayout(ssr_elements.Body, layouts.MetaData{
+				Title:       post.Frontmatter.Title,
+				Description: post.Frontmatter.Description,
+				CoverImage:  "/static/images/outdoorworking.png",
+				CoverWidth:  "16",
+				CoverHeight: "9",
+				SiteURL:     site_url,
+				PageType:    layouts.PageTypePost,
+			}).Render(r.Context(), w)
             // if err := sse.MergeFragmentTempl(c); err != nil {
             //     sse.ConsoleError(err)
             //     return

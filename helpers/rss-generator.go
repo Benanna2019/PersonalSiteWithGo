@@ -3,6 +3,7 @@ package helpers
 import (
 	"bytes"
 	"encoding/base64"
+	"log"
 	"os"
 
 	// "path/filepath"
@@ -14,10 +15,7 @@ import (
 )
 
 func getHostname() string {
-    if hostname := os.Getenv("SITE_URL"); hostname != "" {
-        return hostname
-    }
-    return "http://localhost:8080"
+    return GetSiteURL(); 
 }
 
 func GenerateRSSFeed() error {
@@ -26,8 +24,8 @@ func GenerateRSSFeed() error {
     // Create new feed
     feed := &feeds.Feed{
         Title:       "Enhance Blog Template",
-        Description: "My blog description.",
         Link:        &feeds.Link{Href: hostname},
+        Description: "My blog description.",
         Copyright:   "All rights reserved " + time.Now().Format("2006") + ", My Company",
         Created:     time.Now(),
         Author: &feeds.Author{
@@ -54,20 +52,21 @@ func GenerateRSSFeed() error {
             continue
         }
 
+        pubDate, err := time.Parse("January 2, 2006", post.Frontmatter.Published)
+        if err != nil {
+            log.Printf("Error parsing date for post %s: %v", post.Frontmatter.ID, err)
+            continue
+        }
+
         item := &feeds.Item{
             Title:       post.Frontmatter.Title,
             Link:        &feeds.Link{Href: hostname + "/posts/" + post.Frontmatter.Slug},
             Description: post.Frontmatter.Description,
             Content:     postContent.Html,
             Author:      &feeds.Author{Name: post.Frontmatter.Author},
-            Created:     parseDate(post.Frontmatter.Published),
-
+            Created:     pubDate,
+            Id:         hostname + "/posts/" + post.Frontmatter.Slug, // Add GUID
         }
-
-        // Add categories if present
-        // for _, cat := range post.Frontmatter.Categories {
-        //     item.Category = append(item.Category, &feeds.Category{Term: cat})
-        // }
 
         feed.Items = append(feed.Items, item)
     }

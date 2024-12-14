@@ -1,7 +1,5 @@
 package components
 
-import "github.com/zangster300/northstar/web/layouts"
-
 type CounterStore struct {
 	Global uint32 `json:"global"`
 	User   uint32 `json:"user"`
@@ -49,9 +47,7 @@ templ Counter(store CounterStore) {
 }
 
 templ CounterInitial() {
-	@layouts.Base("Counter Example") {
-		<article class="prose mx-auto m-2">
-			<div id="container" data-on-load="$get('/counter/data')"></div>
-		</article>
-	}
+	<article class="prose mx-auto m-2">
+		<div id="container" data-on-load="$get('/counter/data')"></div>
+	</article>
 }

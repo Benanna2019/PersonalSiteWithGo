@@ -1,19 +1,9 @@
-
-
 package components
 
 import "github.com/zangster300/northstar/web/layouts"
 
-templ DummySiteLayout(element_body string, page_title string) {
-	@layouts.Base(page_title) {
-		<div id="posts-container" class="flex flex-col min-h-screen max-w-5xl mx-auto">
-			@templ.Raw(element_body)
-		</div>
-	}
-}
-
-templ PostDetailWrapper(element_body string, post_title string, postMeta layouts.MetaData) {
-	@layouts.PostDetailBaseWrapper(post_title, postMeta) {
+templ SiteLayout(element_body string, meta layouts.MetaData) {
+	@layouts.Base(meta) {
 		<div id="posts-container" class="flex flex-col min-h-screen max-w-5xl mx-auto">
 			@templ.Raw(element_body)
 		</div>

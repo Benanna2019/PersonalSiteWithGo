@@ -1,5 +1,12 @@
 package layouts
 
+type PageType string
+
+const (
+	PageTypePost    PageType = "post"
+	PageTypeDefault PageType = "default"
+)
+
 type MetaData struct {
 	Title       string
 	Description string
@@ -7,54 +14,44 @@ type MetaData struct {
 	CoverWidth  string
 	CoverHeight string
 	SiteURL     string
+	PageType    PageType
 }
 
-templ Base(title string) {
+templ Base(meta MetaData) {
 	<!DOCTYPE html>
 	<html lang="en" data-theme="light">
 		<head>
-			<title>{ title }</title>
+			<title>{ meta.Title }</title>
+			// Common meta tags
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+			// Conditional meta tags for post pages
+			if meta.PageType == PageTypePost {
+				<meta name="description" content={ meta.Description }/>
+				<meta property="og:type" content="article"/>
+				<meta property="og:title" content={ meta.Title }/>
+				<meta name="twitter:title" content={ meta.Title }/>
+				<meta property="og:description" content={ meta.Description }/>
+				<meta name="twitter:description" content={ meta.Description }/>
+				<meta property="og:image" content={ meta.CoverImage }/>
+				<meta property="og:image:width" content={ meta.CoverWidth }/>
+				<meta property="og:image:height" content={ meta.CoverHeight }/>
+				<meta name="twitter:image" content={ meta.CoverImage }/>
+			}
+			// Common resources
 			<link rel="preconnect" href="https://fonts.googleapis.com"/>
 			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 			<link rel="icon" type="image/x-icon" href="/static/images/favicon.png"/>
 			<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Gideon+Roman:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"/>
+			// <link rel="manifest" href="/static/app.webmanifest"/>
+			<link href="/static/index.css" rel="stylesheet" type="text/css"/>
 			<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 			<script defer type="module" src="/static/index.js"></script>
-			<link href="/static/index.css" rel="stylesheet" type="text/css"/>
+			<script type="module" src="/static/browser/prefetch.mjs"></script>
+			<script type="module" src="/static/browser/snow-fall.mjs"></script>
+			// <script async type="module" src="/static/browser/sw.mjs"></script>
 		</head>
 		<body class="flex flex-col h-screen">
-			{ children... }
-		</body>
-	</html>
-}
-
-templ PostDetailBaseWrapper(title string, meta MetaData) {
-	<!DOCTYPE html>
-	<html lang="en" data-theme="light">
-		<head>
-			<title>{ title }</title>
-			<meta name="description" content={ meta.Description }/>
-			<meta property="og:type" content="article"/>
-			<meta property="og:title" content={ meta.Title }/>
-			<meta name="twitter:title" content={ meta.Title }/>
-			<meta property="og:description" content={ meta.Description }/>
-			<meta name="twitter:description" content={ meta.Description }/>
-			<meta property="og:image" content={ meta.CoverImage }/>
-			<meta property="og:image:width" content={ meta.CoverWidth }/>
-			<meta property="og:image:height" content={ meta.CoverHeight }/>
-			<meta name="twitter:image" content={ meta.CoverImage }/>
-			// ... rest of your existing head content ...
-			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-			<link rel="preconnect" href="https://fonts.googleapis.com"/>
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-			<link rel="icon" type="image/x-icon" href="/static/images/favicon.png"/>
-			<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&family=Gideon+Roman:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet"/>
-			<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-			<script defer type="module" src="/static/index.js"></script>
-			<link href="/static/index.css" rel="stylesheet" type="text/css"/>
-		</head>
-		<body class="flex flex-col h-screen">
+			<snow-fall></snow-fall>
 			{ children... }
 		</body>
 	</html>
