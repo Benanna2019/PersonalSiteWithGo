@@ -10,7 +10,7 @@
   --accent-l: 42.9%;
   --accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
   --light: #fefefe;
-  /* --dark: #222222; */
+  --dark: #222222;
   --fore: var(--dark, currentColor);
   --back: var(--light);
   --error-h: 0;

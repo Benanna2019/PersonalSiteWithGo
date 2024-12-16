@@ -1,0 +1,70 @@
+html {
+  background: var(--color-light);
+  color: var(--color-dark);
+}
+
+body {
+  -webkit-font-smoothing: initial;
+  -moz-osx-font-smoothing: initial;
+}
+
+blockquote {
+  border-width: 1px 1px 1px 4px;
+  border-style: solid;
+  border-color: var(--color-dark);
+}
+
+pre {
+  padding: 0.5rem 1rem;
+  overflow-x: scroll;
+}
+
+code {
+  font-family: ui-monospace, 'IBM Plex Mono', 'Fira Mono', 'Source Code Pro', Menlo, Monaco, monospace;
+  font-size: 0.9em;
+}
+
+hr {
+  border-block-start: 1px solid var(--color-dark);
+  margin-block: 1.5rem;
+}
+
+/* <dl>, <dt>, and <dd> elements don't have markdown syntax;
+ * therefore their styles are defined here rather than markdown-class-mappings.mjs
+ */
+dl {
+  padding-inline-start: var(--space-4);
+}
+
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin-block-end: 1.5em;
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  html {
+    background: var(--color-dark);
+    color: var(--color-light);
+  }
+
+  blockquote {
+    border-color: var(--color-light);
+  }
+
+  hr {
+    border-color: var(--color-light);
+  }
+}
+

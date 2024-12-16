@@ -1,5 +1,5 @@
 ---
-_id: "d26f50fa-9d37-4745-919e-73993aa9cd86"
+"_id": "d26f50fa-9d37-4745-919e-73993aa9cd86"
 title: "Coding Bootcamp - Week 5"
 published: "September 7, 2020"
 slug: "coding-bootcamp-week-5"

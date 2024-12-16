@@ -1,5 +1,5 @@
 ---
-_id: "7180c247-be59-40f2-90ac-c75cd6d3c7b6"
+"_id": "7180c247-be59-40f2-90ac-c75cd6d3c7b6"
 title: "CSS & Div's"
 published: "August 18, 2020"
 slug: "css-and-div-s"

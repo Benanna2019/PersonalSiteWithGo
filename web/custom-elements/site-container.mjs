@@ -14,6 +14,8 @@ function BlogContainer({ html }) {
       }
     </style>
 
-    <slot></slot>
+    <div class="dark:text-white text-black">
+      <slot></slot>
+    </div>
   `;
 }

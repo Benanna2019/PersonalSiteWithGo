@@ -193,10 +193,10 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
 				
 	})
 
-	router.Get("/sw", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/javascript")
-		w.Write([]byte(helpers.GetSWJS()))
-	})
+	// router.Get("/sw", func(w http.ResponseWriter, r *http.Request) {
+	// 	w.Header().Set("Content-Type", "application/javascript")
+	// 	w.Write([]byte(helpers.GetSWJS()))
+	// })
 
 	router.Get("/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
 		    w.Header().Set("Cache-Control", helpers.GetCacheControl())
@@ -223,6 +223,7 @@ func setupIndexRoute(router chi.Router, store sessions.Store, ns *embeddednats.S
                         "author":      post.Frontmatter.Author,
                         "authorImage": post.Frontmatter.AuthorImage,
                         "type":        post.Frontmatter.Type,
+						"components":  post.Frontmatter.CustomElementKeys,
                     },
                     "html": post.Html,
                 },

@@ -30,6 +30,7 @@ type FrontMatter struct {
     Author      string   `yaml:"author"`
     AuthorImage string   `yaml:"authorImage"`
     Type        string   `yaml:"type"`
+    CustomElementKeys []string `yaml:"customElementKeys"`
 }
 
 type PostData struct {
@@ -84,7 +85,8 @@ func ParseMarkdownFile(filename string) (*FrontMatter, string, error) {
     // Setup Markdown parser with all the features
     md := goldmark.New(
         goldmark.WithExtensions(
-            extension.GFM,                // GitHub Flavored Markdown
+            extension.GFM, 
+            extension.Typographer,
             highlighting.NewHighlighting(
 				highlighting.WithStyle("dracula"),
 			),
@@ -97,8 +99,6 @@ func ParseMarkdownFile(filename string) (*FrontMatter, string, error) {
         ),
         goldmark.WithRendererOptions(
             html.WithHardWraps(),
-            html.WithXHTML(),
-            html.WithUnsafe(),
         ),
     )
 
